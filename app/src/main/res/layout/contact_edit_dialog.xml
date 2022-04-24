@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="@dimen/_16sdp"
+    android:background="@drawable/dialog_back"
+    android:layout_width="@dimen/_250sdp"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/edt_name"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:textColor="@color/black"
+        android:hint="Enter Your Name"
+        android:textSize="@dimen/_12ssp"
+        android:padding="@dimen/_8sdp"
+        android:background="@drawable/dialog_back"
+        android:backgroundTint="@color/white"
+        android:inputType="text"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="@dimen/_180sdp"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/edt_phone"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:textColor="@color/black"
+        android:hint="Enter Your Phone Number"
+        android:textSize="@dimen/_12ssp"
+        android:padding="@dimen/_8sdp"
+        android:inputType="text"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/dialog_back"
+        android:backgroundTint="@color/white"
+        android:layout_width="@dimen/_180sdp"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/edt_age"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:textColor="@color/black"
+        android:hint="Enter Your Age"
+        android:textSize="@dimen/_12ssp"
+        android:padding="@dimen/_8sdp"
+        android:inputType="phone"
+        android:background="@drawable/dialog_back"
+        android:backgroundTint="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="@dimen/_180sdp"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_update"
+        android:textColor="@color/white"
+        android:background="@drawable/dialog_back"
+        android:backgroundTint="#03A9F4"
+        android:textSize="@dimen/_12ssp"
+        android:text="Update Contact Data"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:layout_width="@dimen/_180sdp"
+        android:layout_height="wrap_content"/>
+
+
+</LinearLayout>

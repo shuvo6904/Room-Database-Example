@@ -10,10 +10,10 @@ interface ContactDAO {
     suspend fun insertContact(contactData : ContactData)
 
     @Update
-    fun updateContact(contactData: ContactData)
+    suspend fun updateContact(contactData: ContactData)
 
     @Delete
-    fun deleteContact(contactData: ContactData)
+    suspend fun deleteContact(contactData: ContactData)
 
     @Query("SELECT * FROM contact ORDER BY id DESC")
     suspend fun getContact() : List<ContactData>

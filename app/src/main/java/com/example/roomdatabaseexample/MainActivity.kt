@@ -1,5 +1,8 @@
 package com.example.roomdatabaseexample
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -13,12 +16,13 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.roomdatabaseexample.adapter.ContactAdapter
 import com.example.roomdatabaseexample.databinding.ActivityMainBinding
+import com.example.roomdatabaseexample.databinding.ContactEditDialogBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ContactAdapter.RawClickListener {
     lateinit var binding: ActivityMainBinding
-    private val mainViewModel : MainActivityViewModel by lazy { MainActivityViewModel(this) }
+    private val mainViewModel : MainActivityViewModel by lazy { MainActivityViewModel(application) }
     //lateinit var database: ContactDatabase
     lateinit var contactAdapter: ContactAdapter
 
@@ -54,14 +58,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun getData() {
 
-        mainViewModel.getAllContact(this)
+        mainViewModel.getAllContact()
     }
 
     private fun setRecyclerView() {
         binding.roomRecyclerId.apply {
 
             layoutManager = LinearLayoutManager(this@MainActivity)
-            contactAdapter = ContactAdapter()
+            contactAdapter = ContactAdapter(this@MainActivity)
             adapter = contactAdapter
             val divider = DividerItemDecoration(applicationContext, VERTICAL)
             addItemDecoration(divider)
@@ -81,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             && validateEdt(binding.editTextAgeId, age, "Enter Your Age")){
 
             val data = ContactData(0, name, phone, age.toInt())
-            mainViewModel.addUser(this,data)
+            mainViewModel.addUser(data)
             clearEdt()
             Toast.makeText(this,"User Added",Toast.LENGTH_SHORT).show()
 
@@ -107,11 +111,74 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    /*fun getData(view: View) {
-        database.contactDao().getContact().observe(this, Observer {
 
-            Log.d("shuvo", it.toString())
-        })
+    override fun onDeleteUserClickListener(contactData: ContactData) {
+        mainViewModel.deleteContact(contactData)
+        Toast.makeText(this, "User Deleted", Toast.LENGTH_LONG).show()
+    }
 
-    }*/
+    override fun onItemClickListener(contactData: ContactData) {
+        Toast.makeText(this, "Hello ${contactData.name}", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onEditUserClickListener(contactData: ContactData) {
+        showEditDialog(contactData)
+    }
+
+    private fun showEditDialog(contactData: ContactData) {
+        val dialog = Dialog(this)
+        val dialogBinding = ContactEditDialogBinding.inflate(LayoutInflater.from(this),null,false)
+        dialog.setContentView(dialogBinding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        setData(dialogBinding,contactData)
+
+        dialogBinding.buttonUpdate.setOnClickListener {
+
+            val name = dialogBinding.edtName.text.toString()
+            val phone = dialogBinding.edtPhone.text.toString()
+            val age = dialogBinding.edtAge.text.toString()
+
+            if (validateEdt(dialogBinding.edtName,name,"Enter Your Name")
+                && validateEdt(dialogBinding.edtPhone,phone,"Enter Your Phone Number")
+                && validateEdt(dialogBinding.edtAge,age,"Enter Your Age")
+            ){
+                val data = ContactData(contactData.id,name,phone,age.toInt())
+                mainViewModel.updateContact(data)
+                Toast.makeText(this,"Contact Updated",Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+
+    }
+
+    private fun setData(dialogBinding: ContactEditDialogBinding, contactData: ContactData) {
+        dialogBinding.edtName.setText(contactData.name)
+        dialogBinding.edtPhone.setText(contactData.phone)
+        dialogBinding.edtAge.setText(contactData.age.toString())
+
+    }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
