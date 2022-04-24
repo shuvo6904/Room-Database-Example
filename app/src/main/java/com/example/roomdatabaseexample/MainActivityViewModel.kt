@@ -25,6 +25,17 @@ class MainActivityViewModel(context: Context) : ViewModel() {
         GlobalScope.launch {
             val contactDao = ContactDatabase.getDatabase(context).contactDao()
             contactDao.insertContact(contactData)
+            getAllContact(context)
+        }
+
+    }
+
+    fun getAllContact(context: Context){
+
+        GlobalScope.launch {
+            val contactDao = ContactDatabase.getDatabase(context).contactDao()
+            val list = contactDao.getContact()
+            contactLiveData.postValue(list)
         }
 
     }

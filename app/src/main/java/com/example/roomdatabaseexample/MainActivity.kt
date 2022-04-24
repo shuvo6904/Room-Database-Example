@@ -6,8 +6,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
+import android.widget.LinearLayout.VERTICAL
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.roomdatabaseexample.adapter.ContactAdapter
 import com.example.roomdatabaseexample.databinding.ActivityMainBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -16,12 +20,17 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private val mainViewModel : MainActivityViewModel by lazy { MainActivityViewModel(this) }
     //lateinit var database: ContactDatabase
+    lateinit var contactAdapter: ContactAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
+
+        setRecyclerView()
+        getData()
+        setUpObserver()
 
         //database = ContactDatabase.getDatabase(this)
 
@@ -32,6 +41,33 @@ class MainActivity : AppCompatActivity() {
         /*GlobalScope.launch {
             database.contactDao().insertContact(ContactData(0, "Shuvo", "01630209460", 23))
         }*/
+    }
+
+    private fun setUpObserver() {
+
+        mainViewModel.getContactLiveDataObserver().observe(this, Observer {
+            contactAdapter.setListData(ArrayList(it))
+            contactAdapter.notifyDataSetChanged()
+        })
+
+    }
+
+    private fun getData() {
+
+        mainViewModel.getAllContact(this)
+    }
+
+    private fun setRecyclerView() {
+        binding.roomRecyclerId.apply {
+
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            contactAdapter = ContactAdapter()
+            adapter = contactAdapter
+            val divider = DividerItemDecoration(applicationContext, VERTICAL)
+            addItemDecoration(divider)
+        }
+
+
     }
 
     private fun saveDataToDatabase() {
